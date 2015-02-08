@@ -44,9 +44,9 @@ namespace emeging
 
 			server.InvalidUsername += username =>
 			{
-				Username.Focus();
+				Dispatcher.Invoke(() => Username.Focus());
 				MessageBox.Show(
-					string.Format("'{0}' cannot be used. Either somebody else is logged on with the same username, the username has invalid characters, or the server has decided that this username cannot be used.", Username),
+					string.Format("'{0}' cannot be used as a username. Either somebody else is logged on with the same username, the username has invalid characters, or the server has decided that this username cannot be used.", Username.Text),
 					"Error");
 				Dispatcher.Invoke(server.Dispose);
 			};

@@ -93,14 +93,26 @@ namespace emeging
 			await _connection.SendDataAsync(StringToBytes(GetMessageString("SEND", message)));
 		}
 
+		public async Task SetStatus(string message)
+		{
+			await _connection.SendDataAsync(StringToBytes(GetMessageString("STATUS", message)));
+		}
+
+		public async Task SetAfk(bool isAfk)
+		{
+			await _connection.SendDataAsync(StringToBytes(GetMessageString("AFK", isAfk ? "true" : "false")));
+		}
+
 		private static MessageData ConvertMessageString(string message)
 		{
 			var parts = message.Split(' ');
 			if (parts.Length == 1)
 				return new MessageData(parts[0]);
 			if (parts.Length == 2)
-				return new MessageData(parts[0], parts[1].Split('&').Select(Uri.UnescapeDataString).ToArray());
-			
+			{
+				return new MessageData(parts[0], parts[1].Split('&').Select(Uri.UnescapeDataString).Select(Uri.UnescapeDataString).ToArray());
+			}
+
 			throw new InvalidOperationException("The incoming message had an invalid number of arguments.");
 		}
 
