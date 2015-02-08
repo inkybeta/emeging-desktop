@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows.Input;
 using emeging.Models;
 
@@ -18,6 +19,21 @@ namespace emeging
 			Title = string.Format("{0} ({1} - {2}) - emeging", _info.SERVERNAME, _server.Ip, _info.SERVERVENDOR);
 			
 			_server.NewMessage += ServerOnNewMessage;
+			_server.AfkUser += ServerOnAfkUser;
+			_server.UsersReceived += ServerOnUsersReceived;
+		}
+
+		private void ServerOnUsersReceived(Dictionary<string, User> info)
+		{
+			
+		}
+
+		private void ServerOnAfkUser(string user, bool isAfk)
+		{
+			if (isAfk)
+				Dispatcher.Invoke(() => AppendToChat(string.Format("{0} has gone AFK.", user)));
+			else
+				Dispatcher.Invoke(() => AppendToChat(string.Format("{0} has come back from AFK.")));
 		}
 
 		private void ServerOnNewMessage(string user, string message)
@@ -55,6 +71,9 @@ namespace emeging
 					case "/status":
 						int spaceIndex = SendBox.Text.IndexOf(' ');
 						await _server.SetStatus(SendBox.Text.Substring(spaceIndex, SendBox.Text.Length - spaceIndex));
+						break;
+					case "/users":
+						await _server.RequestUsers();
 						break;
 				}
 

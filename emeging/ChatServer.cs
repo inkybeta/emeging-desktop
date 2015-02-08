@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -21,6 +22,12 @@ namespace emeging
 
 		public delegate void NewMessageHandler(string user, string message);
 		public event NewMessageHandler NewMessage;
+
+		public delegate void AfkUserHandler(string user, bool isAfk);
+		public event AfkUserHandler AfkUser;
+
+		public delegate void UsersReceivedHandler(Dictionary<string, User> info);
+		public event UsersReceivedHandler UsersReceived;
 
 		public delegate void InvalidOperationHandler(string msg);
 		public event InvalidOperationHandler InvalidOperation;
@@ -66,6 +73,12 @@ namespace emeging
 					case "NEWMSG":
 						NewMessage(parts.Arguments[0], parts.Arguments[1]);
 						break;
+					case "AFKUSER":
+						AfkUser(parts.Arguments[0], parts.Arguments[1] == "true");
+						break;
+					case "USERSRESP":
+						UsersReceived(JsonConvert.DeserializeObject<Dictionary<string, User>>(parts.Arguments[0]));
+						break;
 					case "INVOP":
 						InvalidOperation(parts.Arguments[0]);
 						break;
@@ -101,6 +114,11 @@ namespace emeging
 		public async Task SetAfk(bool isAfk)
 		{
 			await _connection.SendDataAsync(StringToBytes(GetMessageString("AFK", isAfk ? "true" : "false")));
+		}
+
+		public async Task RequestUsers()
+		{
+			await _connection.SendDataAsync(StringToBytes("USERSREQ"));
 		}
 
 		private static MessageData ConvertMessageString(string message)

@@ -60,6 +60,7 @@
     </ApplicationDefinition>
     <Compile Include="ChatServer.cs" />
     <Compile Include="Models\Inforesp.cs" />
+    <Compile Include="Models\User.cs" />
     <Compile Include="TcpConnection.cs" />
     <Page Include="Chat.xaml">
       <SubType>Designer</SubType>
