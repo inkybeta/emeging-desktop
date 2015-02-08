@@ -99,7 +99,6 @@ namespace emeging
 
 		public void Dispose()
 		{
-			_stream.Dispose();
 			_client.Close();
 		}
 	}

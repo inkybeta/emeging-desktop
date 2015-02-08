@@ -21,7 +21,18 @@ namespace emeging
 			}
 
 			var server = new ChatServer();
-			await server.ConnectAsync(Ip.Text, 2015);
+
+			try
+			{
+				await server.ConnectAsync(Ip.Text, 2015);
+			}
+			catch (System.Net.Sockets.SocketException)
+			{
+				MessageBox.Show(string.Format("A server could not be reached at {0}.", Ip.Text), "Error");
+				server.Dispose();
+				return;
+			}
+
 			Inforesp inforesp = null;
 
 			server.Connected += () => Dispatcher.Invoke(() =>
