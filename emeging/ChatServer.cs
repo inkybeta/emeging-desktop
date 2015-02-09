@@ -56,8 +56,10 @@ namespace emeging
 		{
 			while (true)
 			{
-				var data = BytesToString(_connection.GetData(80));
-				var parts = ConvertMessageString(data);
+				var data = _connection.GetData(80);
+				if (data == null)
+					return;
+				var parts = ConvertMessageString(BytesToString(data));
 
 				switch (parts.Command)
 				{

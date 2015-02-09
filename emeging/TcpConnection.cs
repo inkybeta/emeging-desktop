@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Net.Sockets;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace emeging
@@ -69,6 +70,8 @@ namespace emeging
 				while (ms.Length != 4)
 				{
 					var buffer = new byte[4];
+					if (!_stream.CanRead)
+						return null;
 					var read = _stream.Read(buffer, 0, buffer.Length);
 
 					ms.Write(buffer, 0, read);
@@ -81,6 +84,8 @@ namespace emeging
 				while (ms.Length != byteLength)
 				{
 					var buffer = new byte[bufferSize];
+					if (!_stream.CanRead)
+						return null;
 					var read = _stream.Read(buffer, 0, bufferSize);
 
 					ms.Write(buffer, 0, read);

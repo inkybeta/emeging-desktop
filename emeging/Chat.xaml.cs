@@ -16,8 +16,10 @@ namespace emeging
 			InitializeComponent();
 			_server = server;
 			_info = info;
-			Title = string.Format("{0} ({1} - {2}) - emeging", _info.SERVERNAME, _server.Ip, _info.SERVERVENDOR);
 			
+			Title = string.Format("{0} ({1} - {2}) - emeging", _info.SERVERNAME, _server.Ip, _info.SERVERVENDOR);
+			Messages.Text = string.Format("You have connected to {0} ({1})", info.SERVERNAME, _server.Ip);
+
 			_server.NewMessage += ServerOnNewMessage;
 			_server.AfkUser += ServerOnAfkUser;
 			_server.UsersReceived += ServerOnUsersReceived;
@@ -25,20 +27,31 @@ namespace emeging
 
 		private void ServerOnUsersReceived(Dictionary<string, User> info)
 		{
-			
+			Dispatcher.Invoke(() =>
+			{
+				foreach (var user in info)
+				{
+					if (user.Value.AFK)
+						AppendToChat(string.Format("// User: {0} (is AFK)", user.Key));
+					else
+						AppendToChat(string.Format("// User: {0}", user.Key));
+
+					AppendToChat(string.Format("// Status message: {0}", user.Value.STATUS ?? "No message."));
+				}
+			});
 		}
 
-		private void ServerOnAfkUser(string user, bool isAfk)
+		private void ServerOnAfkUser(string user, bool userAfk)
 		{
-			if (isAfk)
-				Dispatcher.Invoke(() => AppendToChat(string.Format("{0} has gone AFK.", user)));
+			if (userAfk)
+				Dispatcher.Invoke(() => AppendToChat(string.Format("// {0} has gone AFK.", user)));
 			else
-				Dispatcher.Invoke(() => AppendToChat(string.Format("{0} has come back from AFK.")));
+				Dispatcher.Invoke(() => AppendToChat(string.Format("// {0} has come back from AFK.", user)));
 		}
 
 		private void ServerOnNewMessage(string user, string message)
 		{
-			Dispatcher.Invoke(() => AppendToChat(string.Format("{0}{1}: {2}", Environment.NewLine, user, message)));
+			Dispatcher.Invoke(() => AppendToChat(string.Format("{0}: {1}", user, message)));
 		}
 
 		private void Window_Closed(object sender, EventArgs e)
@@ -48,13 +61,17 @@ namespace emeging
 
 		private void AppendToChat(string text)
 		{
-			Messages.AppendText(text);
+			Messages.AppendText(Environment.NewLine + text);
 
 			var prevfocus = FocusManager.GetFocusedElement(this);
 			Messages.Focus();
 			Messages.CaretIndex = Messages.Text.Length;
 			Messages.ScrollToEnd();
-			prevfocus.Focus();
+
+			if (prevfocus == null)
+				SendBox.Focus();
+			else
+				prevfocus.Focus();
 		}
 
 		private async void SendBox_OnKeyDown(object sender, KeyEventArgs e)
