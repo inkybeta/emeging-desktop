@@ -33,7 +33,7 @@ namespace emeging
 			if (isAfk)
 				Dispatcher.Invoke(() => AppendToChat(string.Format("{0} has gone AFK.", user)));
 			else
-				Dispatcher.Invoke(() => AppendToChat(string.Format("{0} has come back from AFK.")));
+				Dispatcher.Invoke(() => AppendToChat(string.Format("{0} has come back from AFK.", user)));
 		}
 
 		private void ServerOnNewMessage(string user, string message)
