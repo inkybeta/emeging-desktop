@@ -2,7 +2,13 @@
 {
 	public class Inforesp
 	{
-		public bool SSLENABLED { get; set; }
+		private bool _sslenabled = false;
+
+		public bool SSLENABLED
+		{
+			get { return _sslenabled; }
+			set { _sslenabled = value; }
+		}
 
 		public string SERVERNAME { get; set; }
 

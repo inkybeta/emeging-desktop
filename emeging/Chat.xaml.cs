@@ -23,6 +23,15 @@ namespace emeging
 			_server.NewMessage += ServerOnNewMessage;
 			_server.AfkUser += ServerOnAfkUser;
 			_server.UsersReceived += ServerOnUsersReceived;
+			_server.Alert += AlertRecieved;
+		}
+
+		private void AlertRecieved(string msg, string prio)
+		{
+			Dispatcher.Invoke(() =>
+			{
+				AppendToChat(String.Format("System: {0}", msg));
+			});
 		}
 
 		private void ServerOnUsersReceived(Dictionary<string, User> info)

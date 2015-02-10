@@ -35,6 +35,9 @@ namespace emeging
 		public delegate void ErrorHandler(string msg);
 		public event ErrorHandler Error;
 
+		public delegate void AlertHandler(string msg, string prio);
+		public event AlertHandler Alert;
+
 		public string Ip { get { return _connection.Ip; } }
 
 		private readonly TcpConnection _connection;
@@ -87,7 +90,10 @@ namespace emeging
 					case "ERROR":
 						Error(parts.Arguments[0]);
 						break;
-					default: 
+					case "ALERT":
+						Alert(parts.Arguments[0], parts.Arguments[1]);
+						break;
+					default:
 						throw new NotImplementedException("The prefix for the string is not implemented.");
 				}
 			}
