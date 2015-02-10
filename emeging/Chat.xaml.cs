@@ -91,8 +91,8 @@ namespace emeging
 				switch (SendBox.Text.Split(' ')[0])
 				{
 					case "/afk":
-						await _server.SetAfk(true);
-						isAfk = true;
+						await _server.SetAfk(!isAfk);
+						isAfk = !isAfk;
 						break;
 					case "/status":
 						int spaceIndex = SendBox.Text.IndexOf(' ');
