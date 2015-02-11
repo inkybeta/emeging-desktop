@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using emeging.Models;
 using Newtonsoft.Json;
 
@@ -37,6 +38,9 @@ namespace emeging
 
 		public delegate void AlertHandler(string msg, string prio);
 		public event AlertHandler Alert;
+
+		public delegate void ShutDownHandler(string msg, string type);
+		public event ShutDownHandler Shutdown;
 
 		public string Ip { get { return _connection.Ip; } }
 
@@ -92,6 +96,9 @@ namespace emeging
 						break;
 					case "ALERT":
 						Alert(parts.Arguments[0], parts.Arguments[1]);
+						break;
+					case "SDOWN":
+						Shutdown(parts.Arguments[0], parts.Arguments[1]);
 						break;
 					default:
 						throw new NotImplementedException("The prefix for the string is not implemented.");

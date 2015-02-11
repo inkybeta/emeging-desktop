@@ -39,7 +39,7 @@ namespace emeging
 			{
 				var chat = new Chat(server, inforesp);
 				chat.Show();
-				Hide();
+				Close();
 			});
 
 			server.InvalidUsername += username => Dispatcher.Invoke(() =>

@@ -24,6 +24,19 @@ namespace emeging
 			_server.AfkUser += ServerOnAfkUser;
 			_server.UsersReceived += ServerOnUsersReceived;
 			_server.Alert += AlertRecieved;
+			_server.Shutdown += ShutdownRecieved;
+		}
+
+		private void ShutdownRecieved(string msg, string type)
+		{
+			Dispatcher.Invoke(() =>
+			{
+				AppendToChat(String.Format("Alert: {0} with code {1}", msg, type));
+				var window = new MainWindow();
+				window.Show();
+				_server.Dispose();
+				Close();
+			});
 		}
 
 		private void AlertRecieved(string msg, string prio)
