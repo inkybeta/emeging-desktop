@@ -109,6 +109,9 @@ namespace emeging
 						break;
 					case "/status":
 						int spaceIndex = SendBox.Text.IndexOf(' ');
+						int index = SendBox.Text.Split(' ').Length;
+						if (index != 2)
+							break;
 						await _server.SetStatus(SendBox.Text.Substring(spaceIndex, SendBox.Text.Length - spaceIndex));
 						break;
 					case "/users":

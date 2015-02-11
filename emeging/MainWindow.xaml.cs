@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.Sockets;
 using System.Windows;
 using emeging.Models;
 
@@ -26,7 +27,7 @@ namespace emeging
 			{
 				await server.ConnectAsync(Ip.Text, 2015);
 			}
-			catch (System.Net.Sockets.SocketException)
+			catch (SocketException)
 			{
 				MessageBox.Show(string.Format("A server could not be reached at {0}.", Ip.Text), "Error");
 				server.Dispose();
